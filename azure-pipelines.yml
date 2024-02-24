@@ -1,35 +1,33 @@
 trigger:
-- main
-- develop
-- feature/*
+  - main
+  - develop
+  - feature/*
 
 pool:
   vmImage: 'windows-latest'
-
 
 variables:
   buildConfiguration: 'Release'
 
 steps:
-- task: DotNetCoreCLI@2
-  inputs:
-  command: 'build'
-  arguments: '--configuration $(buildConfiguration)'
-  displayName: 'dotnet build $(buildConfiguration)'
+  - task: DotNetCoreCLI@2
+    inputs:
+      command: 'build'
+      arguments: '--configuration $(buildConfiguration)'
+    displayName: 'dotnet build $(buildConfiguration)'
 
+  - task: DotNetCoreCLI@2
+    inputs:
+      command: 'publish'
+      arguments: '--configuration $(buildConfiguration)'
+      publishWebProjects: true
+    displayName: 'dotnet build $(buildConfiguration)'
 
-- task: DotNetCoreCLI@2
-  inputs:
-  command: 'publish'
-  arguments: '--configuration $(buildConfiguration)'
-  publishWebProjects: true
-  displayName: 'dotnet build $(buildConfiguration)'
-  
-- task: AzureRmWebAppDeployment@4
-  inputs:
-    ConnectionType: 'AzureRM'
-    azureSubscription: 'Azure subscription 1(0a9b71b2-f37c-4726-8e0a-2fcf8f6c9f6b)'
-    appType: 'webAppLinux'
-    WebAppName: 'chakdhe'
-    packageForLinux: '$(System.DefaultWorkingDirectory)//*.zip'
-    RuntimeStack: 'DOTNETCORE|6.0'
+  - task: AzureRmWebAppDeployment@4
+    inputs:
+      ConnectionType: 'AzureRM'
+      azureSubscription: 'Azure subscription 1(0a9b71b2-f37c-4726-8e0a-2fcf8f6c9f6b)'
+      appType: 'webAppLinux'
+      WebAppName: 'chakdhe'
+      packageForLinux: '$(System.DefaultWorkingDirectory)//*.zip'
+      RuntimeStack: 'DOTNETCORE|6.0' 
